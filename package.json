@@ -20,6 +20,8 @@
     "@angular/platform-browser": "~8.2.9",
     "@angular/platform-browser-dynamic": "~8.2.9",
     "@angular/router": "~8.2.9",
+    "@ngrx/store": "^8.5.2",
+    "@ngrx/store-devtools": "^8.5.2",
     "bootstrap": "^4.4.1",
     "firebase": "^7.5.1",
     "rxjs": "~6.4.0",
