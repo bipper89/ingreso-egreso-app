@@ -10,13 +10,14 @@ import {AngularFirestore} from '@angular/fire/firestore';
 import {Store} from '@ngrx/store';
 import {AppState} from '../app.reducer';
 import {ActivarLoadingAction, DesactivarLoadingAction} from '../shared/ui.actions';
-import {SetUserAction} from './auth.actions';
+import {SetUserAction, UnsetUserAction} from './auth.actions';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   private userSubscription: Subscription = new Subscription();
+  private usuario: User;
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -34,7 +35,6 @@ export class AuthService {
           nombre,
           email: response.user.email
         };
-
         this.afDB.doc(`${user.uid}/usuario`)
           .set(user)
           .then( () => {
@@ -63,6 +63,7 @@ export class AuthService {
 
   logout() {
     this.afAuth.auth.signOut();
+    this.store.dispatch(new UnsetUserAction());
     this.router.navigate(['/login']);
   }
 
@@ -72,9 +73,11 @@ export class AuthService {
         if (fbUser) {
           this.afDB.doc(`${fbUser.uid}/usuario`).valueChanges()
             .subscribe((response: User) => {
+              this.usuario = response;
               this.store.dispatch(new SetUserAction(response));
             });
         } else {
+          this.usuario = null;
           this.userSubscription.unsubscribe();
         }
       }
@@ -91,5 +94,9 @@ export class AuthService {
           return fbUser !== null;
         })
       );
+  }
+
+  getUsuario() {
+    return {...this.usuario};
   }
 }
