@@ -25,8 +25,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.store.select('auth')
       .pipe(
-        filter(auth => auth.user !== null)
-      )
+        filter(auth => auth.user !== null))
       .subscribe(auth => this.nombre = auth.user.nombre);
   }
 
